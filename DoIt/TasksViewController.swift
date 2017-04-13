@@ -8,8 +8,8 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var tableView: UITableView!
     
     var tasks : [Task] = []
@@ -57,6 +57,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func plusTapped(_ sender: Any) {
         performSegue(withIdentifier: "addSegue", sender: nil)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print("row \(indexPath.row) selected")
+        performSegue(withIdentifier: "selectTaskSegue", sender: tasks[indexPath.row])
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "addSegue" {
+            print("prepare for addSegue")
+            let nextVC = segue.destination as! NewTaskViewController
+            nextVC.previousVC = self
+        }
+        
+        if segue.identifier == "selectTaskSegue" {
+            print("prepare for selectTaskSegue")
+            let nextVC = segue.destination as! ViewTaskViewController
+            nextVC.task = sender as! Task
+            //nextVC.previousVC = self
+        }
     }
 }
 
